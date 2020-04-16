@@ -9,12 +9,15 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    // Collection of all flags
     let europeFlags = ["Netherlands", "Greece", "Germany", "Italy", "UK", "Switzerland", "Poland", "Sweden", "Belgium", "Austria", "Denmark", "Croatia", "Ukraine", "Norway", "Finland", "Ireland", "Malta", "Iceland", "Romania", "Hungary", "Luxembourg", "Bulgaria", "Slovenia", "Albania", "Cyprus", "Serbia", "Estonia", "Slovakia", "Portugal", "Czech Republic", "Latvia", "Bosnia and Herzegovina", "Armenia", "Montenegro", "Kosovo", "Georgia", "Lithuania", "Liechtenstein", "Monaco", "Vatican City"]
     let americaFlags = ["USA", "Brazil", "Mexico", "Colombia", "Argentina", "Canada", "Peru", "Venezuela", "Chile", "Ecuador", "Guatemala", "Cuba", "Bolivia", "Haiti", "Dominican Republic", "Paraguay", "Costa Rica", "Jamaica", "Puerto Rico"]
     let africaFlags = ["South Africa", "Nigeria", "Kenya", "Ghana", "Algeria", "Cameroon", "Democratic Republic of the Congo", "Egypt", "Ethiopia", "Liberia", "Libya", "Madagascar", "Mauritius", "Morocco", "Namibia", "Senegal", "Somalia", "Sudan", "Zimbabwe", "Tunisia"]
     let asiaFlags = ["China", "India", "Kazakhstan", "Saudi Arabia", "Iran", "Mongolia", "Indonesia", "Pakistan", "Turkey", "Myanmar", "Afghanistan", "Yemen", "Thailand", "Turkmenistan", "Uzbekistan", "Iraq", "Japan", "Vietnam", "Malaysia", "Oman", "Philippines", "Laos", "Syria", "Cambodia", "Bangladesh", "Nepal", "South Korea", "United Arab Emirates", "Sri Lanka", "Taiwan", "Israel", "Qatar", "Singapore", "Maldives", "Australia", "New Zealand", "Fiji", "Papua New Guinea"]
     
-    @State private var allFlags = ["Germany", "USA", "UK"]
+    // All state properties
+    @State private var allFlags = ["Malta", "Latvia", "Liechtenstein", "Paraguay", "Guatemala", "Puerto Rico", "Mauritius", "Tunisia", "Ethiopia", "Fiji", "Myanmar", "Australia"].shuffled()
     @State private var correctQuestionCount = 0
     @State private var showingAlert = false
     @State private var correctAnswer = Int.random(in: 0 ..< 3)
@@ -43,17 +46,19 @@ struct ContentView: View {
         
         if !gameStatusActive {
             label = "Start Game"
-        } else if questionCount == 10 {
+        } else if questionCount == 15 {
             label = "Start Game"
         } else {
             label = "Restart Game"
         }
-        
         return label
     }
     
+    // MARK: - body View
     var body: some View {
+        
         ZStack {
+            
             LinearGradient(gradient: Gradient(colors: [topColor, bottomColor]), startPoint: .top, endPoint: .bottom)
                 .edgesIgnoringSafeArea(.all)
             
@@ -101,11 +106,10 @@ struct ContentView: View {
                     } .buttonStyle(PlainButtonStyle())
                 }
                 
-                Text("\(questionCount) out of 10")
+                Text("\(questionCount) out of 15. Correct answers: \(correctQuestionCount)")
                     .foregroundColor(darkGrey)
                     .frame(minWidth: 100)
                     .font(.headline)
-                
             }
         }
             
@@ -117,31 +121,32 @@ struct ContentView: View {
         
     }
     
+    //MARK: - Game Methods
     func startGame(flagArea: Int) {
         
         switch flagArea {
         case 0:
-            checkGameStatus()
+            setGameSettings()
             allFlags.removeAll()
             allFlags.append(contentsOf: europeFlags)
             allFlags.shuffle()
         case 1:
-            checkGameStatus()
+            setGameSettings()
             allFlags.removeAll()
             allFlags.append(contentsOf: americaFlags)
             allFlags.shuffle()
         case 2:
-            checkGameStatus()
+            setGameSettings()
             allFlags.removeAll()
             allFlags.append(contentsOf: africaFlags)
             allFlags.shuffle()
         case 3:
-            checkGameStatus()
+            setGameSettings()
             allFlags.removeAll()
             allFlags.append(contentsOf: asiaFlags)
             allFlags.shuffle()
         case 4:
-            checkGameStatus()
+            setGameSettings()
             allFlags.removeAll()
             allFlags.append(contentsOf: europeFlags + americaFlags + africaFlags + asiaFlags)
             allFlags.shuffle()
@@ -150,18 +155,10 @@ struct ContentView: View {
         }
     }
     
-    func checkGameStatus() {
-        
-        if !gameStatusActive {
-            gameStatusActive = true
-            correctQuestionCount = 0
-            questionCount = 1
-        } else {
-            correctQuestionCount = 0
-            questionCount = 1
-            gameStatusActive = true
-        }
-        
+    func setGameSettings() {
+        gameStatusActive = true
+        correctQuestionCount = 0
+        questionCount = 1
     }
     
     func checkAnswer(number: Int) {
@@ -182,7 +179,7 @@ struct ContentView: View {
     }
     
     func correctFlagTapped(country: Int) {
-        if questionCount == 9 {
+        if questionCount == 14 {
             gameFinished()
         } else {
             showingAlert = true
@@ -191,11 +188,10 @@ struct ContentView: View {
             dismissButton = "Next Question"
             questionCount += 1
         }
-        
     }
     
     func wrongFlagTapped(country: Int) {
-        if questionCount == 9 {
+        if questionCount == 14 {
             gameFinished()
         } else {
             showingAlert = true
@@ -204,7 +200,6 @@ struct ContentView: View {
             dismissButton = "Next Question"
             questionCount += 1
         }
-        
     }
     
     func gameFinished() {
@@ -214,11 +209,10 @@ struct ContentView: View {
         dismissButton = "Dismiss"
         questionCount += 1
         gameStatusActive = false
-        
     }
-    
 }
 
+//MARK: - Preview Provider
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
